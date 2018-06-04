@@ -124,8 +124,8 @@ def get_users_positions():
     """
 
     conn = open_connection()
-    cursor = conn.execute("SELECT ncard,username,position,direction FROM DATA" %(numcard))
-    rows = cursor
+    cursor = conn.execute("SELECT ncard,username,position,direction FROM DATA")
+    rows = cursor.fetchall()
 
     return rows
 

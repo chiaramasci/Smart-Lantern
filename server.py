@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template,request,redirect
 import database_functions as fn
 import sqlite3
 
@@ -6,10 +6,23 @@ app = Flask(__name__)
 
 conn = sqlite3.connect("database.db")
 
-
 @app.route("/")
 def index():
-    return "sciao belli"
+    return render_template("index.html")
+
+@app.route("/start")
+def start():
+    return render_template("start.html")
+
+@app.route("/tutorial")
+def tutorial():
+    return render_template("tutorial.html")
+
+@app.route("/getuserspositions")
+def getuserspositions():
+    pos = fn.get_users_positions()
+    return render_template("positions.html", positions=pos)
+
 
 @app.route("/nextdirection/<int:position_now>")
 def next_direction(position_now):
@@ -33,6 +46,18 @@ def getdirectionraspberry(ncard):
     direction = fn.get_direction_raspberry(ncard)
     return direction
 
+@app.route("/insertinitialdata", methods = ['POST','GET'])
+def insertindata():
+    if request.method == 'POST':
+        ncard = request.form['ncard']
+        username = request.form['username']
+        print(ncard)
+        fn.insert_initial_data(int(ncard),username)
+        return redirect("/tutorial")
+        #return redirect("/getinitialdata/"+ncard+"/"+username)
+    else:
+        return redirect("/tutorial.html")
+
 @app.route("/insertinitialdata/<int:ncard>/<username>")
 def insertinitialdata(ncard,username):
     fn.insert_initial_data(ncard,username)
@@ -53,4 +78,5 @@ def getposition(ncard):
     
     return str(pos)
 
-app.run(host="0.0.0.0")
+if __name__ == '__main__':
+    app.run(host="0.0.0.0")
