@@ -31,17 +31,17 @@ def next_direction(position_now):
     
     return str(next_dir)
 
-@app.route("/createrecord/<int:ncard>/<username>/<int:position>/<direction>")
+@app.route("/createrecord/<ncard>/<username>/<int:position>/<direction>")
 def createrecord(ncard,username,position,direction):
     fn.create_record(ncard,username,position,direction)
     return "record created successfully"
 
-@app.route("/updaterecord/<int:ncard>/<int:position>/<direction>")
+@app.route("/updaterecord/<ncard>/<int:position>/<direction>")
 def updaterecord(ncard,position,direction):
     fn.update_record(ncard,position,direction)
     return "record updated successfully"
 
-@app.route("/getdirectionraspberry/<int:ncard>")
+@app.route("/getdirectionraspberry/<ncard>")
 def getdirectionraspberry(ncard):
     direction = fn.get_direction_raspberry(ncard)
     return direction
@@ -58,19 +58,19 @@ def insertindata():
     else:
         return redirect("/tutorial.html")
 
-@app.route("/insertinitialdata/<int:ncard>/<username>")
+@app.route("/insertinitialdata/<ncard>/<username>")
 def insertinitialdata(ncard,username):
     fn.insert_initial_data(ncard,username)
     return "data inserted successfully"
 
-@app.route("/getinitialdata/<int:ncard>")
+@app.route("/getinitialdata/<ncard>")
 def getinitialdata(ncard):
     #initial_data = fn.get_initial_data(ncard)
     cursor = conn.execute('SELECT * FROM START WHERE NCARD = %d' %(ncard))
     initial_data = cursor.fetchall()[0][1]
     return initial_data
 
-@app.route("/getposition/<int:ncard>")
+@app.route("/getposition/<ncard>")
 def getposition(ncard):
     cursor = conn.execute("SELECT ncard,username,position,direction FROM DATA WHERE NCARD = %d" %(ncard))
     #conn.close()

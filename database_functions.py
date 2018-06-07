@@ -39,7 +39,7 @@ def create_record(numcard,username,position,direction):
     Create new row in DATA table
 
     Args:
-        numcard(int)
+        numcard(string)
         username(string)
         position(int)
         direction(string)
@@ -48,9 +48,9 @@ def create_record(numcard,username,position,direction):
     conn = open_connection()
     cursor = conn.execute('SELECT ncard,username,position,direction FROM DATA WHERE ncard = %d' %(numcard))
     if len(cursor.fetchall()) == 0:
-        conn.execute('INSERT INTO DATA VALUES (%d,"%s",%d,"%s")' %(numcard,username,position,direction))
+        conn.execute('INSERT INTO DATA VALUES ("%s","%s",%d,"%s")' %(numcard,username,position,direction))
     else:
-        conn.execute('UPDATE DATA SET POSITION = %d, DIRECTION = "%s" WHERE NCARD = %d' %(position,direction,numcard))
+        conn.execute('UPDATE DATA SET POSITION = %d, DIRECTION = "%s" WHERE NCARD = "%s"' %(position,direction,numcard))
     conn.commit()
     conn.close()
 
@@ -59,14 +59,14 @@ def update_record(numcard,position,direction):
     updates the position and the direction in the row of numcard
 
     Args:
-        numcard(int)
+        numcard(string)
         position(int)
         direction(string)
 
     """
 
     conn = open_connection()
-    conn.execute("UPDATE DATA SET POSITION = %d, DIRECTION = '%s' WHERE NCARD = %d " %(position,direction,numcard))
+    conn.execute("UPDATE DATA SET POSITION = %d, DIRECTION = '%s' WHERE NCARD = '%s' " %(position,direction,numcard))
     conn.commit()
     conn.close()
 
@@ -75,10 +75,10 @@ def get_direction_raspberry(numcard):
     function to get the direction form DATA of the specific ncard
 
     Args:
-        numcard(int)
+        numcard(string)
     """
     conn = open_connection()
-    cursor = conn.execute("SELECT ncard,username,position,direction FROM DATA WHERE ncard = %d" %(numcard))
+    cursor = conn.execute("SELECT ncard,username,position,direction FROM DATA WHERE ncard = '%s'" %(numcard))
     direction = cursor.fetchall()[0][3]
     return direction
 
@@ -87,15 +87,15 @@ def insert_initial_data(numcard,username):
     upload numcard and username in START table from the phone
 
     Args:
-        numcard(int)
+        numcard(string)
         username(string)
     """
     conn = open_connection()
-    cursor = conn.execute('SELECT ncard,username FROM START WHERE ncard = %d' %(numcard))
+    cursor = conn.execute('SELECT ncard,username FROM START WHERE ncard = "%s"' %(numcard))
     if len(cursor.fetchall()) == 0:
-        conn.execute('INSERT INTO START VALUES (%d,"%s")' %(numcard,username))
+        conn.execute('INSERT INTO START VALUES ("%s","%s")' %(numcard,username))
     else:
-        conn.execute('UPDATE START SET USERNAME = "%s" WHERE NCARD = %d' %(username,numcard))
+        conn.execute('UPDATE START SET USERNAME = "%s" WHERE NCARD = "%s"' %(username,numcard))
     conn.commit()
     conn.close()
 
@@ -104,13 +104,13 @@ def get_initial_data(numcard):
     get numcard and username inserted from mobile phone stored in table START
 
     Args:
-        numcard(int)
+        numcard(string)
 
     Returns:
         cursor(array): cursor[0] is ncard, cursor[1] is username
     """
     conn = open_connection()
-    cursor = conn.execute('SELECT * FROM START WHERE NCARD = %d' %(numcard))
+    cursor = conn.execute('SELECT * FROM START WHERE NCARD = "%s"' %(numcard))
     row = cursor.fetchall()[0]
     return row
 
@@ -134,13 +134,13 @@ def get_position(numcard):
     Gets user's position from DATA table
 
     Args:
-        numcard(int)
+        numcard(string)
 
     Returns:
 
     """
     conn = open_connection()
-    cursor = conn.execute("SELECT ncard,username,position,direction FROM DATA WHERE NCARD = %d" %(numcard))
+    cursor = conn.execute("SELECT ncard,username,position,direction FROM DATA WHERE NCARD = '%s'" %(numcard))
     #conn.close()
     pos = cursor.fetchall()[0][2]
 
