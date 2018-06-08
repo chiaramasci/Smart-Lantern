@@ -46,7 +46,7 @@ def create_record(numcard,username,position,direction):
     """
 
     conn = open_connection()
-    cursor = conn.execute('SELECT ncard,username,position,direction FROM DATA WHERE ncard = %d' %(numcard))
+    cursor = conn.execute('SELECT ncard,username,position,direction FROM DATA WHERE ncard = "%s"' %(numcard))
     if len(cursor.fetchall()) == 0:
         conn.execute('INSERT INTO DATA VALUES ("%s","%s",%d,"%s")' %(numcard,username,position,direction))
     else:

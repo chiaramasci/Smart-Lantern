@@ -66,17 +66,17 @@ def insertinitialdata(ncard,username):
 @app.route("/getinitialdata/<ncard>")
 def getinitialdata(ncard):
     #initial_data = fn.get_initial_data(ncard)
-    cursor = conn.execute('SELECT * FROM START WHERE NCARD = %d' %(ncard))
+    cursor = conn.execute('SELECT * FROM START WHERE NCARD = "%s"' %(ncard))
     initial_data = cursor.fetchall()[0][1]
     return initial_data
 
 @app.route("/getposition/<ncard>")
 def getposition(ncard):
-    cursor = conn.execute("SELECT ncard,username,position,direction FROM DATA WHERE NCARD = %d" %(ncard))
+    cursor = conn.execute("SELECT ncard,username,position,direction FROM DATA WHERE NCARD = '%s'" %(ncard))
     #conn.close()
     pos = cursor.fetchall()[0][2]
     
     return str(pos)
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0")
+    app.run(host="0.0.0.0",port=5000)
